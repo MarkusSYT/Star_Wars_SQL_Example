@@ -1,288 +1,526 @@
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-
-CREATE SCHEMA IF NOT EXISTS `star_wars` ;
-USE `star_wars` ;
-
--- -----------------------------------------------------
--- Table `star_wars`.`e_fraction`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`e_fraction` (
-  `fraction_name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`fraction_name`))
-ENGINE = InnoDB;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
--- -----------------------------------------------------
--- Table `star_wars`.`e_species`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`e_species` (
-  `species_name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`species_name`))
-ENGINE = InnoDB;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Datenbank: `star_wars`
+--
 
--- -----------------------------------------------------
--- Table `star_wars`.`e_professions`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`e_professions` (
-  `profession` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`profession`))
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Tabellenstruktur für Tabelle `aliases`
+--
 
--- -----------------------------------------------------
--- Table `star_wars`.`characters`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`characters` (
-  `character_id` INT NOT NULL AUTO_INCREMENT,
-  `first_name` VARCHAR(50) NOT NULL,
-  `last_name` VARCHAR(100) NOT NULL,
-  `fraction_name` VARCHAR(50) NOT NULL,
-  `species_name` VARCHAR(50) NOT NULL,
-  `profession` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`character_id`, `fraction_name`, `species_name`, `profession`),
-  INDEX `fk_characters_e_fraction_idx` (`fraction_name` ASC) VISIBLE,
-  INDEX `fk_characters_e_species1_idx` (`species_name` ASC) VISIBLE,
-  INDEX `fk_characters_e_professions1_idx` (`profession` ASC) VISIBLE,
-  CONSTRAINT `fk_characters_e_fraction`
-    FOREIGN KEY (`fraction_name`)
-    REFERENCES `star_wars`.`e_fraction` (`fraction_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_characters_e_species1`
-    FOREIGN KEY (`species_name`)
-    REFERENCES `star_wars`.`e_species` (`species_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_characters_e_professions1`
-    FOREIGN KEY (`profession`)
-    REFERENCES `star_wars`.`e_professions` (`profession`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE `aliases` (
+  `characters_character_id` int(11) NOT NULL,
+  `characters_fraction_name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `star_wars`.`weapons_bt`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`weapons_bt` (
-  `weapon_id` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`weapon_id`))
-ENGINE = InnoDB;
+--
+-- Tabellenstruktur für Tabelle `blasters`
+--
 
+CREATE TABLE `blasters` (
+  `weapon_id` int(11) NOT NULL,
+  `Name` varchar(25) NOT NULL,
+  `mag_size` int(11) NOT NULL,
+  `type` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- -----------------------------------------------------
--- Table `star_wars`.`e_lightsaber_color`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`e_lightsaber_color` (
-  `color` VARCHAR(10) NOT NULL,
-  PRIMARY KEY (`color`))
-ENGINE = InnoDB;
+--
+-- Daten für Tabelle `blasters`
+--
 
+INSERT INTO `blasters` (`weapon_id`, `Name`, `mag_size`, `type`) VALUES
+(7, 'DL-44', 10, 'pistol'),
+(8, 'E-11', 50, 'rifle'),
+(9, 'EE-3', 10, 'rifle'),
+(10, 'DLT-19', 150, 'rifle'),
+(11, 'T-21', 200, 'rifle'),
+(12, 'DH-17', 10, 'pistol'),
+(13, 'ELG-3A', 10, 'pistol'),
+(14, 'DC-15A', 100, 'rifle'),
+(15, 'DC-15S', 100, 'rifle'),
+(16, 'DC-17', 20, 'pistol'),
+(17, 'E-5', 50, 'rifle');
 
--- -----------------------------------------------------
--- Table `star_wars`.`lightsabers`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`lightsabers` (
-  `weapon_id` INT NOT NULL,
-  `color` VARCHAR(10) NOT NULL,
-  PRIMARY KEY (`weapon_id`, `color`),
-  INDEX `fk_lightsabers_e_lightsaber_color1_idx` (`color` ASC) VISIBLE,
-  CONSTRAINT `fk_lightsaber_weapons_bt1`
-    FOREIGN KEY (`weapon_id`)
-    REFERENCES `star_wars`.`weapons_bt` (`weapon_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_lightsabers_e_lightsaber_color1`
-    FOREIGN KEY (`color`)
-    REFERENCES `star_wars`.`e_lightsaber_color` (`color`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Tabellenstruktur für Tabelle `characters`
+--
 
--- -----------------------------------------------------
--- Table `star_wars`.`e_blaster_type`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`e_blaster_type` (
-  `type` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`type`))
-ENGINE = InnoDB;
+CREATE TABLE `characters` (
+  `character_id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `fraction_name` varchar(50) NOT NULL,
+  `species_name` varchar(50) NOT NULL,
+  `profession` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `star_wars`.`blasters`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`blasters` (
-  `weapon_id` INT NOT NULL,
-  `mag_size` INT NOT NULL,
-  `type` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`weapon_id`, `type`),
-  INDEX `fk_blasters_e_blaster_type1_idx` (`type` ASC) VISIBLE,
-  CONSTRAINT `fk_blasters_weapons_bt1`
-    FOREIGN KEY (`weapon_id`)
-    REFERENCES `star_wars`.`weapons_bt` (`weapon_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_blasters_e_blaster_type1`
-    FOREIGN KEY (`type`)
-    REFERENCES `star_wars`.`e_blaster_type` (`type`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+--
+-- Tabellenstruktur für Tabelle `clones`
+--
 
+CREATE TABLE `clones` (
+  `character_id` int(11) NOT NULL,
+  `code` varchar(45) NOT NULL,
+  `rank` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- -----------------------------------------------------
--- Table `star_wars`.`weapons_bt_has_characters_jt`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`weapons_bt_has_characters_jt` (
-  `weapons_bt_weapon_id` INT NOT NULL,
-  `characters_character_id` INT NOT NULL,
-  `characters_fraction_name` VARCHAR(50) NOT NULL,
-  `characters_species_name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`weapons_bt_weapon_id`, `characters_character_id`, `characters_fraction_name`, `characters_species_name`),
-  INDEX `fk_weapons_bt_has_characters_characters1_idx` (`characters_character_id` ASC, `characters_fraction_name` ASC, `characters_species_name` ASC) VISIBLE,
-  INDEX `fk_weapons_bt_has_characters_weapons_bt1_idx` (`weapons_bt_weapon_id` ASC) VISIBLE,
-  CONSTRAINT `fk_weapons_bt_has_characters_weapons_bt1`
-    FOREIGN KEY (`weapons_bt_weapon_id`)
-    REFERENCES `star_wars`.`weapons_bt` (`weapon_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_weapons_bt_has_characters_characters1`
-    FOREIGN KEY (`characters_character_id` , `characters_fraction_name` , `characters_species_name`)
-    REFERENCES `star_wars`.`characters` (`character_id` , `fraction_name` , `species_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Tabellenstruktur für Tabelle `droids`
+--
 
--- -----------------------------------------------------
--- Table `star_wars`.`kills`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`kills` (
-  `killer_character_id` INT NOT NULL,
-  `victim_character_id` INT NOT NULL,
-  PRIMARY KEY (`killer_character_id`, `victim_character_id`),
-  INDEX `fk_characters_has_characters_characters2_idx` (`victim_character_id` ASC) VISIBLE,
-  INDEX `fk_characters_has_characters_characters1_idx` (`killer_character_id` ASC) VISIBLE,
-  CONSTRAINT `fk_characters_has_characters_characters1`
-    FOREIGN KEY (`killer_character_id`)
-    REFERENCES `star_wars`.`characters` (`character_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_characters_has_characters_characters2`
-    FOREIGN KEY (`victim_character_id`)
-    REFERENCES `star_wars`.`characters` (`character_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE `droids` (
+  `droid_id` int(11) NOT NULL,
+  `droid_name` varchar(45) NOT NULL,
+  `type` varchar(25) NOT NULL,
+  `profession` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `droids`
+--
 
--- -----------------------------------------------------
--- Table `star_wars`.`e_droid_type`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`e_droid_type` (
-  `type` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`type`))
-ENGINE = InnoDB;
+INSERT INTO `droids` (`droid_id`, `droid_name`, `type`, `profession`) VALUES
+(1, 'C-3PO', 'Protocol droid', 'Other'),
+(2, 'R2-D2', 'Astromech droid', 'Other'),
+(3, 'IG-88', 'Assassin droid', 'Bounty Hunter');
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `star_wars`.`droids`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`droids` (
-  `droid_id` INT NOT NULL AUTO_INCREMENT,
-  `droid_name` VARCHAR(45) NOT NULL,
-  `type` VARCHAR(25) NOT NULL,
-  `profession` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`droid_id`, `type`, `profession`),
-  INDEX `fk_droids_e_droid_type1_idx` (`type` ASC) VISIBLE,
-  INDEX `fk_droids_e_professions1_idx` (`profession` ASC) VISIBLE,
-  CONSTRAINT `fk_droids_e_droid_type1`
-    FOREIGN KEY (`type`)
-    REFERENCES `star_wars`.`e_droid_type` (`type`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_droids_e_professions1`
-    FOREIGN KEY (`profession`)
-    REFERENCES `star_wars`.`e_professions` (`profession`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+--
+-- Tabellenstruktur für Tabelle `e_blaster_type`
+--
 
+CREATE TABLE `e_blaster_type` (
+  `type` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- -----------------------------------------------------
--- Table `star_wars`.`weapons_bt_has_droids_jt`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`weapons_bt_has_droids_jt` (
-  `weapons_bt_weapon_id` INT NOT NULL,
-  `droids_droid_id` INT NOT NULL,
-  `droids_type` VARCHAR(25) NOT NULL,
-  `droids_profession` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`weapons_bt_weapon_id`, `droids_droid_id`, `droids_type`, `droids_profession`),
-  INDEX `fk_weapons_bt_has_droids_droids1_idx` (`droids_droid_id` ASC, `droids_type` ASC, `droids_profession` ASC) VISIBLE,
-  INDEX `fk_weapons_bt_has_droids_weapons_bt1_idx` (`weapons_bt_weapon_id` ASC) VISIBLE,
-  CONSTRAINT `fk_weapons_bt_has_droids_weapons_bt1`
-    FOREIGN KEY (`weapons_bt_weapon_id`)
-    REFERENCES `star_wars`.`weapons_bt` (`weapon_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_weapons_bt_has_droids_droids1`
-    FOREIGN KEY (`droids_droid_id` , `droids_type` , `droids_profession`)
-    REFERENCES `star_wars`.`droids` (`droid_id` , `type` , `profession`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+--
+-- Daten für Tabelle `e_blaster_type`
+--
 
+INSERT INTO `e_blaster_type` (`type`) VALUES
+('pistol'),
+('rifle'),
+('sniper');
 
--- -----------------------------------------------------
--- Table `star_wars`.`aliases`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`aliases` (
-  `characters_character_id` INT NOT NULL,
-  `characters_fraction_name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`characters_character_id`, `characters_fraction_name`),
-  CONSTRAINT `fk_aliases_characters1`
-    FOREIGN KEY (`characters_character_id` , `characters_fraction_name`)
-    REFERENCES `star_wars`.`characters` (`character_id` , `fraction_name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Tabellenstruktur für Tabelle `e_droid_type`
+--
 
--- -----------------------------------------------------
--- Table `star_wars`.`e_rank`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`e_rank` (
-  `rank` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`rank`))
-ENGINE = InnoDB;
+CREATE TABLE `e_droid_type` (
+  `type` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `e_droid_type`
+--
 
--- -----------------------------------------------------
--- Table `star_wars`.`clones`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `star_wars`.`clones` (
-  `character_id` INT NOT NULL,
-  `code` VARCHAR(45) NOT NULL,
-  `rank` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`character_id`, `rank`),
-  INDEX `fk_clones_e_rank1_idx` (`rank` ASC) VISIBLE,
-  CONSTRAINT `fk_clones_characters1`
-    FOREIGN KEY (`character_id`)
-    REFERENCES `star_wars`.`characters` (`character_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_clones_e_rank1`
-    FOREIGN KEY (`rank`)
-    REFERENCES `star_wars`.`e_rank` (`rank`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+INSERT INTO `e_droid_type` (`type`) VALUES
+('Assassin droid'),
+('Astromech droid'),
+('B1 Battledroid'),
+('B2 Battledroid'),
+('Medical droid'),
+('Pilot droid'),
+('Protocol droid'),
+('Scout droid');
 
+-- --------------------------------------------------------
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+--
+-- Tabellenstruktur für Tabelle `e_fraction`
+--
+
+CREATE TABLE `e_fraction` (
+  `fraction_name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `e_fraction`
+--
+
+INSERT INTO `e_fraction` (`fraction_name`) VALUES
+('Black Sun'),
+('Confederacy of Independant Systems'),
+('First Order'),
+('Galactic Empire'),
+('Galactic Republic'),
+('Hutts'),
+('Intergalactic Banking Clan'),
+('Mandalorians'),
+('New Republic'),
+('Old Republic'),
+('Rebel Alliance'),
+('Resistance'),
+('Shadow Collective'),
+('Sith Empire'),
+('Techno Union'),
+('Trade Federation');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `e_lightsaber_color`
+--
+
+CREATE TABLE `e_lightsaber_color` (
+  `color` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `e_lightsaber_color`
+--
+
+INSERT INTO `e_lightsaber_color` (`color`) VALUES
+('blue'),
+('green'),
+('orange'),
+('red'),
+('violet'),
+('yellow');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `e_professions`
+--
+
+CREATE TABLE `e_professions` (
+  `profession` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `e_professions`
+--
+
+INSERT INTO `e_professions` (`profession`) VALUES
+('Bounty Hunter'),
+('Jedi'),
+('Leader'),
+('Other'),
+('Pilot'),
+('Senator'),
+('Sith'),
+('Smuggler'),
+('Solider');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `e_rank`
+--
+
+CREATE TABLE `e_rank` (
+  `rank` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `e_rank`
+--
+
+INSERT INTO `e_rank` (`rank`) VALUES
+('Captain'),
+('Commander'),
+('Corporal'),
+('Lieutenant'),
+('Private'),
+('Sergeant');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `e_species`
+--
+
+CREATE TABLE `e_species` (
+  `species_name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `e_species`
+--
+
+INSERT INTO `e_species` (`species_name`) VALUES
+('Bith'),
+('Bothan'),
+('Chagrian'),
+('Chiss'),
+('Devaronian'),
+('Dug'),
+('Duros'),
+('Ewok'),
+('Gamorrean'),
+('Geonosian'),
+('Gran'),
+('Gungan'),
+('Human'),
+('Hutt'),
+('Ithorians'),
+('Jawa'),
+('Kaminoan'),
+('Lasat'),
+('Mon Calamari'),
+('Muun'),
+('Neimoidian'),
+('Quarren'),
+('Rodian'),
+('Sullustan'),
+('Talz'),
+('Togruta'),
+('Toydarians'),
+('Trandoshan'),
+('Tusken'),
+('Twi’lek'),
+('Ugnaught'),
+('Utapaun'),
+('Wookiee'),
+('Zabrak');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `kills`
+--
+
+CREATE TABLE `kills` (
+  `killer_character_id` int(11) NOT NULL,
+  `victim_character_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `lightsabers`
+--
+
+CREATE TABLE `lightsabers` (
+  `weapon_id` int(11) NOT NULL,
+  `color` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `lightsabers`
+--
+
+INSERT INTO `lightsabers` (`weapon_id`, `color`) VALUES
+(1, 'blue'),
+(2, 'green'),
+(3, 'violet'),
+(4, 'yellow'),
+(5, 'orange'),
+(6, 'red');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `weapons_bt`
+--
+
+CREATE TABLE `weapons_bt` (
+  `weapon_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `weapons_bt`
+--
+
+INSERT INTO `weapons_bt` (`weapon_id`) VALUES
+(1),
+(2),
+(3),
+(4),
+(5),
+(6),
+(7),
+(8),
+(9),
+(10),
+(11),
+(12),
+(13),
+(14),
+(15),
+(16),
+(17);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `weapons_bt_has_characters_jt`
+--
+
+CREATE TABLE `weapons_bt_has_characters_jt` (
+  `weapons_bt_weapon_id` int(11) NOT NULL,
+  `characters_character_id` int(11) NOT NULL,
+  `characters_fraction_name` varchar(50) NOT NULL,
+  `characters_species_name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `weapons_bt_has_droids_jt`
+--
+
+CREATE TABLE `weapons_bt_has_droids_jt` (
+  `weapons_bt_weapon_id` int(11) NOT NULL,
+  `droids_droid_id` int(11) NOT NULL,
+  `droids_type` varchar(25) NOT NULL,
+  `droids_profession` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `weapons_bt_has_droids_jt`
+--
+
+INSERT INTO `weapons_bt_has_droids_jt` (`weapons_bt_weapon_id`, `droids_droid_id`, `droids_type`, `droids_profession`) VALUES
+(17, 3, 'Assassin Droid', 'Bounty Hunter');
+
+--
+-- Indizes der exportierten Tabellen
+--
+
+--
+-- Indizes für die Tabelle `aliases`
+--
+ALTER TABLE `aliases`
+  ADD PRIMARY KEY (`characters_character_id`,`characters_fraction_name`);
+
+--
+-- Indizes für die Tabelle `blasters`
+--
+ALTER TABLE `blasters`
+  ADD PRIMARY KEY (`weapon_id`,`type`);
+
+--
+-- Indizes für die Tabelle `characters`
+--
+ALTER TABLE `characters`
+  ADD PRIMARY KEY (`character_id`,`fraction_name`,`species_name`,`profession`);
+
+--
+-- Indizes für die Tabelle `clones`
+--
+ALTER TABLE `clones`
+  ADD PRIMARY KEY (`character_id`,`rank`);
+
+--
+-- Indizes für die Tabelle `droids`
+--
+ALTER TABLE `droids`
+  ADD PRIMARY KEY (`droid_id`,`type`,`profession`);
+
+--
+-- Indizes für die Tabelle `e_blaster_type`
+--
+ALTER TABLE `e_blaster_type`
+  ADD PRIMARY KEY (`type`);
+
+--
+-- Indizes für die Tabelle `e_droid_type`
+--
+ALTER TABLE `e_droid_type`
+  ADD PRIMARY KEY (`type`);
+
+--
+-- Indizes für die Tabelle `e_fraction`
+--
+ALTER TABLE `e_fraction`
+  ADD PRIMARY KEY (`fraction_name`);
+
+--
+-- Indizes für die Tabelle `e_lightsaber_color`
+--
+ALTER TABLE `e_lightsaber_color`
+  ADD PRIMARY KEY (`color`);
+
+--
+-- Indizes für die Tabelle `e_professions`
+--
+ALTER TABLE `e_professions`
+  ADD PRIMARY KEY (`profession`);
+
+--
+-- Indizes für die Tabelle `e_rank`
+--
+ALTER TABLE `e_rank`
+  ADD PRIMARY KEY (`rank`);
+
+--
+-- Indizes für die Tabelle `e_species`
+--
+ALTER TABLE `e_species`
+  ADD PRIMARY KEY (`species_name`);
+
+--
+-- Indizes für die Tabelle `kills`
+--
+ALTER TABLE `kills`
+  ADD PRIMARY KEY (`killer_character_id`,`victim_character_id`);
+
+--
+-- Indizes für die Tabelle `lightsabers`
+--
+ALTER TABLE `lightsabers`
+  ADD PRIMARY KEY (`weapon_id`,`color`);
+
+--
+-- Indizes für die Tabelle `weapons_bt`
+--
+ALTER TABLE `weapons_bt`
+  ADD PRIMARY KEY (`weapon_id`);
+
+--
+-- Indizes für die Tabelle `weapons_bt_has_characters_jt`
+--
+ALTER TABLE `weapons_bt_has_characters_jt`
+  ADD PRIMARY KEY (`weapons_bt_weapon_id`,`characters_character_id`,`characters_fraction_name`,`characters_species_name`);
+
+--
+-- Indizes für die Tabelle `weapons_bt_has_droids_jt`
+--
+ALTER TABLE `weapons_bt_has_droids_jt`
+  ADD PRIMARY KEY (`weapons_bt_weapon_id`,`droids_droid_id`,`droids_type`,`droids_profession`);
+
+--
+-- AUTO_INCREMENT für exportierte Tabellen
+--
+
+--
+-- AUTO_INCREMENT für Tabelle `characters`
+--
+ALTER TABLE `characters`
+  MODIFY `character_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `droids`
+--
+ALTER TABLE `droids`
+  MODIFY `droid_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT für Tabelle `weapons_bt`
+--
+ALTER TABLE `weapons_bt`
+  MODIFY `weapon_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+COMMIT;
