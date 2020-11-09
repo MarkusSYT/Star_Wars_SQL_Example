@@ -1,3 +1,12 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.3
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Erstellungszeit: 09. Nov 2020 um 06:32
+-- Server-Version: 10.4.14-MariaDB
+-- PHP-Version: 7.2.34
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -20,8 +29,15 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `aliases` (
   `characters_character_id` int(11) NOT NULL,
-  `characters_fraction_name` varchar(50) NOT NULL
+  `nickname` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `aliases`
+--
+
+INSERT INTO `aliases` (`characters_character_id`, `nickname`) VALUES
+(1, 'Ani');
 
 -- --------------------------------------------------------
 
@@ -68,6 +84,27 @@ CREATE TABLE `characters` (
   `profession` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `characters`
+--
+
+INSERT INTO `characters` (`character_id`, `first_name`, `last_name`, `fraction_name`, `species_name`, `profession`) VALUES
+(1, 'Anakin', 'Skywalker', 'Galactic Republic', 'Human', 'Jedi'),
+(2, 'Obi Wan', 'Kenobi', 'Galactic Republic', 'Human', 'Jedi'),
+(3, 'Sheev', 'Palpatine', 'Galactic Republic', 'Human', 'Senator'),
+(4, 'Padmé', 'Amedala', 'Galactic Republic', 'Human', 'Senator'),
+(5, 'Yoda', 'Unknown', 'Galactic Republic', 'Unknown', 'Jedi'),
+(6, 'Cad', 'Bane', 'Hutts', 'Duros', 'Bounty Hunter'),
+(7, 'Mace', 'Windu', 'Galactic Republic', 'Human', 'Jedi'),
+(8, 'Jar Jar', 'Binks', 'Galactic Republic', 'Gungan', 'Senator'),
+(9, 'Nute', 'Gunray', 'Trade Federation', 'Neimoidian', 'Senator'),
+(10, 'Luke', 'Skywalker', 'Rebel Alliance', 'Human', 'Jedi'),
+(11, 'Fives', 'Unknown', 'Galactic Republic', 'Human', 'Solider'),
+(12, 'Rex', 'Unknown', 'Galactic Republic', 'Human', 'Solider'),
+(13, 'Echo', 'Unknown', 'Galactic Republic', 'Human', 'Solider'),
+(14, 'Cody', 'Unknown', 'Galactic Republic', 'Human', 'Solider'),
+(15, 'Appo', 'Unknown', 'Galactic Republic', 'Human', 'Solider');
+
 -- --------------------------------------------------------
 
 --
@@ -79,6 +116,17 @@ CREATE TABLE `clones` (
   `code` varchar(45) NOT NULL,
   `rank` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `clones`
+--
+
+INSERT INTO `clones` (`character_id`, `code`, `rank`) VALUES
+(11, 'CT-5555', 'ARC'),
+(12, 'CT-7567', 'Captain'),
+(13, 'CT-1409', 'ARC'),
+(14, 'CC-2224', 'Commander'),
+(15, 'CC-1119', 'Commander');
 
 -- --------------------------------------------------------
 
@@ -239,6 +287,7 @@ CREATE TABLE `e_rank` (
 --
 
 INSERT INTO `e_rank` (`rank`) VALUES
+('ARC'),
 ('Captain'),
 ('Commander'),
 ('Corporal'),
@@ -307,6 +356,13 @@ CREATE TABLE `kills` (
   `victim_character_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `kills`
+--
+
+INSERT INTO `kills` (`killer_character_id`, `victim_character_id`) VALUES
+(3, 7);
+
 -- --------------------------------------------------------
 
 --
@@ -371,10 +427,26 @@ INSERT INTO `weapons_bt` (`weapon_id`) VALUES
 
 CREATE TABLE `weapons_bt_has_characters_jt` (
   `weapons_bt_weapon_id` int(11) NOT NULL,
-  `characters_character_id` int(11) NOT NULL,
-  `characters_fraction_name` varchar(50) NOT NULL,
-  `characters_species_name` varchar(50) NOT NULL
+  `characters_character_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `weapons_bt_has_characters_jt`
+--
+
+INSERT INTO `weapons_bt_has_characters_jt` (`weapons_bt_weapon_id`, `characters_character_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 10),
+(2, 4),
+(2, 10),
+(3, 7),
+(6, 3),
+(15, 11),
+(15, 13),
+(15, 14),
+(15, 15),
+(16, 12);
 
 -- --------------------------------------------------------
 
@@ -384,17 +456,15 @@ CREATE TABLE `weapons_bt_has_characters_jt` (
 
 CREATE TABLE `weapons_bt_has_droids_jt` (
   `weapons_bt_weapon_id` int(11) NOT NULL,
-  `droids_droid_id` int(11) NOT NULL,
-  `droids_type` varchar(25) NOT NULL,
-  `droids_profession` varchar(25) NOT NULL
+  `droids_droid_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Daten für Tabelle `weapons_bt_has_droids_jt`
 --
 
-INSERT INTO `weapons_bt_has_droids_jt` (`weapons_bt_weapon_id`, `droids_droid_id`, `droids_type`, `droids_profession`) VALUES
-(17, 3, 'Assassin Droid', 'Bounty Hunter');
+INSERT INTO `weapons_bt_has_droids_jt` (`weapons_bt_weapon_id`, `droids_droid_id`) VALUES
+(17, 3);
 
 --
 -- Indizes der exportierten Tabellen
@@ -404,7 +474,7 @@ INSERT INTO `weapons_bt_has_droids_jt` (`weapons_bt_weapon_id`, `droids_droid_id
 -- Indizes für die Tabelle `aliases`
 --
 ALTER TABLE `aliases`
-  ADD PRIMARY KEY (`characters_character_id`,`characters_fraction_name`);
+  ADD PRIMARY KEY (`characters_character_id`,`nickname`);
 
 --
 -- Indizes für die Tabelle `blasters`
@@ -494,13 +564,13 @@ ALTER TABLE `weapons_bt`
 -- Indizes für die Tabelle `weapons_bt_has_characters_jt`
 --
 ALTER TABLE `weapons_bt_has_characters_jt`
-  ADD PRIMARY KEY (`weapons_bt_weapon_id`,`characters_character_id`,`characters_fraction_name`,`characters_species_name`);
+  ADD PRIMARY KEY (`weapons_bt_weapon_id`,`characters_character_id`) USING BTREE;
 
 --
 -- Indizes für die Tabelle `weapons_bt_has_droids_jt`
 --
 ALTER TABLE `weapons_bt_has_droids_jt`
-  ADD PRIMARY KEY (`weapons_bt_weapon_id`,`droids_droid_id`,`droids_type`,`droids_profession`);
+  ADD PRIMARY KEY (`weapons_bt_weapon_id`,`droids_droid_id`) USING BTREE;
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -510,7 +580,7 @@ ALTER TABLE `weapons_bt_has_droids_jt`
 -- AUTO_INCREMENT für Tabelle `characters`
 --
 ALTER TABLE `characters`
-  MODIFY `character_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `character_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT für Tabelle `droids`
@@ -524,3 +594,7 @@ ALTER TABLE `droids`
 ALTER TABLE `weapons_bt`
   MODIFY `weapon_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
